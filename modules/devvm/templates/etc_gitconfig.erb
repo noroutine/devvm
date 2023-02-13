@@ -1,0 +1,21 @@
+[push]
+	default = current
+[alias]
+	co = checkout
+	br = branch
+	ci = commit
+	st = status
+	unstage = reset HEAD --
+	last = log -5 --abbrev-commit --pretty=format:\"%C(cyan)%h%Creset %C(yellow bold)%d%C(reset) %s %Cgreenby %an %cr%Creset\" HEAD
+	twitter = log --graph --abbrev-commit --pretty=format:\"%C(cyan)%h%Creset %C(yellow bold)%d%C(reset) %s %Cgreenby %an %cr%Creset\"
+	ff = pull --ff-only
+
+[color]
+	ui = auto
+
+[diff]
+	tool = meld
+
+[user]
+	name = <%= @git_user %>
+	email = <%= @git_email %>

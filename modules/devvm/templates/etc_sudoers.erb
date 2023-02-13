@@ -1,0 +1,40 @@
+#
+# This file MUST be edited with the 'visudo' command as root.
+#
+# Please consider adding local content in /etc/sudoers.d/ instead of
+# directly modifying this file.
+#
+
+Defaults	env_reset
+Defaults	env_keep+=STY
+Defaults	mail_badpass
+Defaults	secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+# Host alias specification
+
+# User alias specification
+
+# Cmnd alias specification
+
+# User privilege specification
+root	ALL=(ALL:ALL) NOPASSWD: ALL
+
+%tomcat  ALL=(ALL:ALL) NOPASSWD: /usr/sbin/apache2ctl
+%tomcat  ALL=(ALL:ALL) NOPASSWD: /usr/sbin/apachectl
+%tomcat  ALL=(ALL:ALL) NOPASSWD: /etc/init.d/*
+%tomcat  ALL=(ALL:ALL) NOPASSWD: /bin/systemctl
+%tomcat  ALL=(ALL:ALL) NOPASSWD: /bin/journalctl
+%tomcat  ALL=(ALL:ALL) NOPASSWD: /usr/bin/apt-*
+%tomcat  ALL=(ALL:ALL) NOPASSWD: /usr/bin/dpkg-*
+%tomcat  ALL=(ALL:ALL) NOPASSWD: /usr/bin/dpkg
+%tomcat  ALL=(ALL:ALL) NOPASSWD: /usr/bin/pip
+
+# Allow members of group sudo to execute any command
+%sudo		ALL=(ALL:ALL) NOPASSWD: ALL
+
+# Allow members of group tomcat to impersonate as tomcat
+%tomcat ALL=(root)   NOPASSWD: /bin/su - tomcat
+%tomcat ALL=(root)   NOPASSWD: /bin/su - tomcat *
+%tomcat ALL=(tomcat) NOPASSWD: ALL
+
+#includedir /etc/sudoers.d

@@ -1,0 +1,13 @@
+{
+  "name": "devvm",
+  "version": "0.1.0",
+  "author": "noroutine",
+  "summary": "Developer VM",
+  "license": "Apache 2.0",
+  "source": "https://github.com/noroutine/devvm",
+  "project_page": "https://github.com/noroutine/devvm",
+  "issues_url": "https://github.com/noroutine/devvm",
+  "dependencies": [
+    {"name":"puppetlabs-stdlib","version_requirement":">= 1.0.0"}
+  ]
+}

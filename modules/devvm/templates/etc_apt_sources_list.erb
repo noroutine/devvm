@@ -1,0 +1,30 @@
+<% if @lsbdistcodename == "buster" -%>
+deb http://httpredir.debian.org/debian <%= @lsbdistcodename %> main contrib non-free
+# deb-src http://httpredir.debian.org/debian <%= @lsbdistcodename %> main contrib non-free
+
+deb http://security.debian.org/debian-security <%= @lsbdistcodename %>/updates main contrib non-free
+# deb-src http://security.debian.org/debian-security <%= @lsbdistcodename %>/updates main contrib non-free
+
+deb http://httpredir.debian.org/debian <%= @lsbdistcodename %>-backports main contrib non-free
+# deb-src http://httpredir.debian.org/debian <%= @lsbdistcodename %>-backports main contrib non-free
+<% else %>
+deb http://deb.debian.org/debian <%= @lsbdistcodename %> main contrib non-free
+# deb-src http://deb.debian.org/debian <%= @lsbdistcodename %> main contrib non-free
+
+deb http://deb.debian.org/debian-security/ <%= @lsbdistcodename %>-security main contrib non-free
+# deb-src http://deb.debian.org/debian-security/ <%= @lsbdistcodename %>-security main contrib non-free
+
+deb http://deb.debian.org/debian <%= @lsbdistcodename %>-updates main contrib non-free
+# deb-src http://deb.debian.org/debian <%= @lsbdistcodename %>-updates main contrib non-free
+
+deb http://deb.debian.org/debian <%= @lsbdistcodename %>-backports main contrib non-free
+# deb-src http://deb.debian.org/debian <%= @lsbdistcodename %>-backports main contrib non-free
+<% end %>
+
+# Extra repositories
+deb http://ppa.launchpad.net/ansible/ansible/ubuntu jammy main
+deb [arch=amd64] https://download.docker.com/linux/debian <%= @lsbdistcodename %> stable
+deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main
+deb http://apt.postgresql.org/pub/repos/apt/ <%= @lsbdistcodename %>-pgdg main
+deb https://download.sublimetext.com/ apt/stable/
+deb [arch=amd64] https://packages.microsoft.com/repos/code stable main

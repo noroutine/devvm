@@ -1,0 +1,63 @@
+cat <<'Banner'
+      _
+  __| | _____   ____   ___ __ ___
+ / _` |/ _ \ \ / /\ \ / / '_ ` _ \
+| (_| |  __/\ V /  \ V /| | | | | |
+ \__,_|\___| \_/    \_/ |_| |_| |_|
+                             
+Banner
+
+BOOTSTRAP_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
+
+export DEBIAN_FRONTEND=noninteractive
+
+os_codename=$(lsb_release -c -s)
+
+if [[ ! -x /opt/puppetlabs/bin/puppet ]]; then
+	echo "Installing Puppet Agent..."
+	sudo dpkg -i ${BOOTSTRAP_DIR}/puppet7-release-${os_codename}.deb
+	sudo apt-get -yyq update && sudo apt-get -yyq install puppet-agent
+fi
+
+(
+	sudo telinit 3
+	sudo pkill -u tomcat
+	sudo chvt 1
+) &> /dev/null
+
+declare -a puppet_modules=(
+	puppetlabs-apt
+	puppetlabs-postgresql
+	example42-network
+	camptocamp-archive
+	camptocamp-systemd
+)
+
+for puppet_module in "${puppet_modules[@]}"; do
+	sudo /opt/puppetlabs/bin/puppet module install --target-dir ${BOOTSTRAP_DIR}/modules ${puppet_module}
+done
+
+
+sudo FACTERLIB=${BOOTSTRAP_DIR}/facter \
+	/opt/puppetlabs/bin/puppet apply \
+		--modulepath=${BOOTSTRAP_DIR}/modules \
+		${BOOTSTRAP_DIR}/bootstrap.pp
+		
+sudo apt-get -qq autoremove --purge || :
+
+sudo telinit 5
+
+if sudo systemctl list-unit-files | grep -q gdm.service; then
+	sudo systemctl restart gdm
+elif sudo systemctl list-unit-files | grep -q lightdm.service; then
+	sudo systemctl restart lightdm
+fi
+
+sudo chown -R tomcat.tomcat /opt
+[[ -e /opt/google ]] && sudo chown -R root.root /opt/google || :
+[[ -e /opt/puppetlabs ]] && sudo chown -R root.root /opt/puppetlabs || :
+[[ -e /opt/google/chrome/chrome-sandbox ]] && sudo chmod 4755 /opt/google/chrome/chrome-sandbox || :
+[[ -e /etc/apt/sources.list.d/google-chrome.list ]] && sudo rm /etc/apt/sources.list.d/google-chrome.list
+[[ -e /etc/apt/sources.list.d/vscode.list ]] && sudo rm /etc/apt/sources.list.d/vscode.list
+
+true
